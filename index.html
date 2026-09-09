@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Social Photo Demo</title>
+<style>
+:root{--bg:#0b0d10;--panel:#171a1f;--line:#292d34;--text:#f5f7fa;--muted:#9ba2ad;--blue:#3797f0}
+*{box-sizing:border-box}body{margin:0;background:#050607;color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:flex;justify-content:center;background:#050607}
+.phone{width:100%;max-width:520px;min-height:100vh;background:var(--bg);position:relative}
+.screen{display:none;min-height:100vh;padding-bottom:70px}.screen.active{display:block}
+.topbar{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,13,16,.96);z-index:5}
+.logo{font-weight:800;font-size:27px;letter-spacing:-1.4px}.iconbtn{border:0;background:none;color:#fff;font-size:25px;padding:5px}
+.stories{display:flex;gap:14px;overflow-x:auto;padding:14px 12px;border-bottom:1px solid var(--line);scrollbar-width:none}.stories::-webkit-scrollbar{display:none}
+.story{min-width:72px;text-align:center;color:#ddd;font-size:12px}.ring{width:64px;height:64px;padding:3px;border-radius:50%;background:linear-gradient(45deg,#ffd600,#ff7a00,#ff0169,#d300c5,#7638fa);margin:auto auto 6px}.ring img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:3px solid var(--bg)}
+.feed{padding-bottom:10px}.post{border-bottom:1px solid var(--line)}.posthead{display:flex;align-items:center;gap:10px;padding:11px 13px}.avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#30343b}.posthead strong{font-size:14px}.postimg{width:100%;aspect-ratio:1/1;object-fit:cover;background:#111}.actions{display:flex;gap:16px;padding:10px 13px 3px}.actions button{background:none;border:0;color:#fff;font-size:24px;padding:0}.caption{padding:0 13px 14px;font-size:14px}.caption span{color:#aaa}
+.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);height:64px;background:rgba(11,13,16,.98);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;z-index:20}.bottom button{border:0;background:none;color:#fff;font-size:24px}.bottom img{width:27px;height:27px;border-radius:50%;object-fit:cover}
+.login{min-height:100vh;padding:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1d1d20}.login .brand{font-size:42px;font-weight:800;letter-spacing:-2px;margin-bottom:55px}.loginbox{width:100%;max-width:390px}.login input{width:100%;height:58px;margin:7px 0;background:#202126;border:1px solid #555962;border-radius:15px;color:#fff;padding:0 16px;font-size:16px}.primary{width:100%;height:54px;border:0;border-radius:28px;background:#1877f2;color:#fff;font-weight:700;margin-top:8px}.secondary{width:100%;height:52px;border:1px solid #4d9cff;border-radius:27px;background:transparent;color:#62a9ff;font-weight:700;margin-top:360px}.login small{color:#ddd;margin-top:22px}.demo-note{font-size:11px;color:#a9adb5;text-align:center;margin-top:12px;line-height:1.4}
+.profile{padding:18px 15px}.profilehead{display:flex;gap:20px;align-items:center}.profilehead .avatar{width:88px;height:88px}.stats{display:flex;gap:25px}.stats b{display:block;text-align:center;font-size:19px}.stats span{font-size:12px;color:#aaa}.bio{margin-top:14px}.profile-actions{display:flex;gap:8px;margin:15px 0}.profile-actions button{flex:1;border:1px solid #454a52;background:#272b31;color:#fff;border-radius:8px;height:40px;font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.grid img{width:100%;aspect-ratio:1;object-fit:cover;background:#111}
+.editor{margin:15px 0;padding:15px;border:1px solid var(--line);border-radius:12px;background:#12151a}.editor h3{margin:0 0 12px}.editor input{width:100%;margin:5px 0;padding:11px;border-radius:8px;border:1px solid #444;background:#20242a;color:#fff}.editor button{margin-top:8px;padding:10px 14px;border:0;border-radius:8px;background:#fff;color:#111;font-weight:700}
+.modal{position:fixed;inset:0;background:#000;z-index:50;display:none}.modal.show{display:block}.storyview{height:100%;position:relative;display:flex;align-items:center;justify-content:center}.storyview img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain}.storytop{position:absolute;top:14px;left:14px;right:14px;display:flex;align-items:center;gap:10px;z-index:2}.storytop .avatar{width:34px;height:34px}.close{margin-left:auto;background:none;border:0;color:#fff;font-size:32px}.progress{position:absolute;top:6px;left:8px;right:8px;height:3px;background:#555}.progress i{display:block;width:100%;height:100%;background:#fff}.storytext{position:absolute;bottom:70px;left:20px;right:20px;text-align:center;font-size:18px;font-weight:700;text-shadow:0 2px 5px #000}
+.toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);background:#fff;color:#111;padding:10px 15px;border-radius:20px;display:none;z-index:70}.toast.show{display:block}
+@media(min-width:700px){.phone{box-shadow:0 0 40px #000}}
+</style>
+</head>
+<body>
+<div class="app"><main class="phone">
+
+<section id="login" class="screen active">
+  <div class="login">
+    <div class="brand">Social</div>
+    <div class="loginbox">
+      <input id="loginUser" placeholder="Username, email address or mobile number" autocomplete="off">
+      <input id="loginPass" type="password" placeholder="Password" autocomplete="off">
+      <button class="primary" onclick="login()">Log in</button>
+      <div style="text-align:center;margin-top:20px;font-weight:700">Forgotten password?</div>
+      <button class="secondary" onclick="demoAccount()">Create new account</button>
+      <div class="demo-note">Demo website only. This login is local to this page and does not collect or send real Instagram credentials.</div>
+    </div>
+  </div>
+</section>
+
+<section id="home" class="screen">
+  <div class="topbar"><button class="iconbtn" onclick="show('profile')">＋</button><div class="logo">Social</div><button class="iconbtn" onclick="alert('Messages demo')">♡</button></div>
+  <div id="stories" class="stories"></div>
+  <div id="feed" class="feed"></div>
+  <nav class="bottom"><button onclick="show('home')">⌂</button><button onclick="addPost()">＋</button><button onclick="show('profile')"><img id="navAvatar"></button></nav>
+</section>
+
+<section id="profile" class="screen">
+  <div class="topbar"><button class="iconbtn" onclick="show('home')">‹</button><div class="logo" id="profileNameTop">yourname</div><button class="iconbtn" onclick="scrollToEditor()">☰</button></div>
+  <div class="profile">
+    <div class="profilehead"><img class="avatar" id="profileAvatar"><div class="stats"><div><b id="postCount">0</b><span>posts</span></div><div><b>1,389</b><span>followers</span></div><div><b>347</b><span>following</span></div></div></div>
+    <div class="bio"><b id="profileName">yourname</b><div id="profileBio">Your bio goes here.</div></div>
+    <div class="profile-actions"><button onclick="scrollToEditor()">Edit profile</button><button onclick="shareProfile()">Share profile</button></div>
+    <div class="editor" id="editor">
+      <h3>Customize your demo</h3>
+      <input id="nameInput" placeholder="Username">
+      <input id="avatarInput" placeholder="Profile image URL">
+      <input id="bioInput" placeholder="Bio">
+      <input id="postInput" placeholder="Post image URL">
+      <input id="storyInput" placeholder="Story image URL">
+      <input id="storyTextInput" placeholder="Story text">
+      <button onclick="saveProfile()">Save profile / add images</button>
+      <div class="demo-note">Use direct image URLs ending in .jpg, .png, .webp, etc. Everything is stored only in this browser.</div>
+    </div>
+    <div id="grid" class="grid"></div>
+  </div>
+  <nav class="bottom"><button onclick="show('home')">⌂</button><button onclick="addPost()">＋</button><button onclick="show('profile')"><img id="navAvatar2"></button></nav>
+</section>
+
+<div id="storyModal" class="modal">
+  <div class="storyview"><img id="storyImage"><div class="progress"><i></i></div>
+    <div class="storytop"><img class="avatar" id="storyAvatar"><b id="storyName"></b><button class="close" onclick="closeStory()">×</button></div>
+    <div class="storytext" id="storyText"></div>
+  </div>
+</div>
+<div id="toast" class="toast"></div>
+</main></div>
+
+<script>
+const defaultAvatar='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300';
+let data=JSON.parse(localStorage.getItem('socialDemo')||'null')||{
+ name:'yourname',bio:'Your bio goes here.',avatar:defaultAvatar,
+ posts:[
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900',
+  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900',
+  'https://images.unsplash.com/photo-1504593811423-6dd665756598?w=900',
+  'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=900'
+ ],
+ stories:[
+  {image:'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900',text:'My story'},
+  {image:'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900',text:'Hello!'},
+  {image:'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900',text:'New post'}
+ ]};
+function save(){localStorage.setItem('socialDemo',JSON.stringify(data))}
+function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='home')renderHome();if(id==='profile')renderProfile()}
+function login(){show('home')}
+function demoAccount(){document.getElementById('loginUser').value='demo';document.getElementById('loginPass').value='demo123';show('home')}
+function renderHome(){
+ document.getElementById('stories').innerHTML=data.stories.map((s,i)=>`<div class="story" onclick="openStory(${i})"><div class="ring"><img src="${s.image}"></div>${i===0?'Your story':data.name}</div>`).join('');
+ document.getElementById('feed').innerHTML=data.posts.map((p,i)=>`<article class="post"><div class="posthead"><img class="avatar" src="${data.avatar}"><strong>${data.name}</strong></div><img class="postimg" src="${p}" onerror="this.style.display='none'"><div class="actions"><button onclick="like(this)">♡</button><button onclick="alert('Comments demo')">◯</button><button onclick="sharePost()">⌁</button></div><div class="caption"><b>${data.name}</b> <span>${i%2?'A new photo ✨':'Just posted.'}</span></div></article>`).join('');
+ syncAvatars();
+}
+function renderProfile(){
+ document.getElementById('profileNameTop').textContent=data.name;
+ document.getElementById('profileName').textContent=data.name;
+ document.getElementById('profileBio').textContent=data.bio;
+ document.getElementById('profileAvatar').src=data.avatar;
+ document.getElementById('postCount').textContent=data.posts.length;
+ document.getElementById('grid').innerHTML=data.posts.map(p=>`<img src="${p}" onerror="this.style.opacity=.3">`).join('');
+ document.getElementById('nameInput').value=data.name;document.getElementById('avatarInput').value=data.avatar;document.getElementById('bioInput').value=data.bio;
+ syncAvatars();
+}
+function syncAvatars(){document.querySelectorAll('#navAvatar,#navAvatar2').forEach(x=>x.src=data.avatar)}
+function saveProfile(){
+ const n=document.getElementById('nameInput').value.trim();const a=document.getElementById('avatarInput').value.trim();const b=document.getElementById('bioInput').value.trim();const p=document.getElementById('postInput').value.trim();const s=document.getElementById('storyInput').value.trim();const st=document.getElementById('storyTextInput').value.trim();
+ if(n)data.name=n;if(a)data.avatar=a;if(b)data.bio=b;if(p)data.posts.unshift(p);if(s)data.stories.unshift({image:s,text:st||'My story'});
+ save();document.getElementById('postInput').value='';document.getElementById('storyInput').value='';document.getElementById('storyTextInput').value='';renderProfile();toast('Saved')}
+function openStory(i){const s=data.stories[i];document.getElementById('storyImage').src=s.image;document.getElementById('storyAvatar').src=data.avatar;document.getElementById('storyName').textContent=data.name;document.getElementById('storyText').textContent=s.text||'';document.getElementById('storyModal').classList.add('show')}
+function closeStory(){document.getElementById('storyModal').classList.remove('show')}
+function scrollToEditor(){document.getElementById('editor').scrollIntoView({behavior:'smooth'})}
+function like(b){b.textContent=b.textContent==='♡'?'♥':'♡'}
+function sharePost(){navigator.clipboard?.writeText(location.href);toast('Demo link copied')}
+function shareProfile(){navigator.clipboard?.writeText(location.href);toast('Profile link copied')}
+function addPost(){show('profile');setTimeout(scrollToEditor,50)}
+function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1400)}
+renderHome();
+</script>
+</body>
+</html>
