@@ -1,136 +1,400 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>Social Photo Demo</title>
-<style>
-:root{--bg:#0b0d10;--panel:#171a1f;--line:#292d34;--text:#f5f7fa;--muted:#9ba2ad;--blue:#3797f0}
-*{box-sizing:border-box}body{margin:0;background:#050607;color:var(--text);font-family:Arial,Helvetica,sans-serif}
-button,input{font:inherit}button{cursor:pointer}
-.app{min-height:100vh;display:flex;justify-content:center;background:#050607}
-.phone{width:100%;max-width:520px;min-height:100vh;background:var(--bg);position:relative}
-.screen{display:none;min-height:100vh;padding-bottom:70px}.screen.active{display:block}
-.topbar{height:62px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(11,13,16,.96);z-index:5}
-.logo{font-weight:800;font-size:27px;letter-spacing:-1.4px}.iconbtn{border:0;background:none;color:#fff;font-size:25px;padding:5px}
-.stories{display:flex;gap:14px;overflow-x:auto;padding:14px 12px;border-bottom:1px solid var(--line);scrollbar-width:none}.stories::-webkit-scrollbar{display:none}
-.story{min-width:72px;text-align:center;color:#ddd;font-size:12px}.ring{width:64px;height:64px;padding:3px;border-radius:50%;background:linear-gradient(45deg,#ffd600,#ff7a00,#ff0169,#d300c5,#7638fa);margin:auto auto 6px}.ring img{width:100%;height:100%;object-fit:cover;border-radius:50%;border:3px solid var(--bg)}
-.feed{padding-bottom:10px}.post{border-bottom:1px solid var(--line)}.posthead{display:flex;align-items:center;gap:10px;padding:11px 13px}.avatar{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#30343b}.posthead strong{font-size:14px}.postimg{width:100%;aspect-ratio:1/1;object-fit:cover;background:#111}.actions{display:flex;gap:16px;padding:10px 13px 3px}.actions button{background:none;border:0;color:#fff;font-size:24px;padding:0}.caption{padding:0 13px 14px;font-size:14px}.caption span{color:#aaa}
-.bottom{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(520px,100%);height:64px;background:rgba(11,13,16,.98);border-top:1px solid var(--line);display:flex;justify-content:space-around;align-items:center;z-index:20}.bottom button{border:0;background:none;color:#fff;font-size:24px}.bottom img{width:27px;height:27px;border-radius:50%;object-fit:cover}
-.login{min-height:100vh;padding:30px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#1d1d20}.login .brand{font-size:42px;font-weight:800;letter-spacing:-2px;margin-bottom:55px}.loginbox{width:100%;max-width:390px}.login input{width:100%;height:58px;margin:7px 0;background:#202126;border:1px solid #555962;border-radius:15px;color:#fff;padding:0 16px;font-size:16px}.primary{width:100%;height:54px;border:0;border-radius:28px;background:#1877f2;color:#fff;font-weight:700;margin-top:8px}.secondary{width:100%;height:52px;border:1px solid #4d9cff;border-radius:27px;background:transparent;color:#62a9ff;font-weight:700;margin-top:360px}.login small{color:#ddd;margin-top:22px}.demo-note{font-size:11px;color:#a9adb5;text-align:center;margin-top:12px;line-height:1.4}
-.profile{padding:18px 15px}.profilehead{display:flex;gap:20px;align-items:center}.profilehead .avatar{width:88px;height:88px}.stats{display:flex;gap:25px}.stats b{display:block;text-align:center;font-size:19px}.stats span{font-size:12px;color:#aaa}.bio{margin-top:14px}.profile-actions{display:flex;gap:8px;margin:15px 0}.profile-actions button{flex:1;border:1px solid #454a52;background:#272b31;color:#fff;border-radius:8px;height:40px;font-weight:700}
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px}.grid img{width:100%;aspect-ratio:1;object-fit:cover;background:#111}
-.editor{margin:15px 0;padding:15px;border:1px solid var(--line);border-radius:12px;background:#12151a}.editor h3{margin:0 0 12px}.editor input{width:100%;margin:5px 0;padding:11px;border-radius:8px;border:1px solid #444;background:#20242a;color:#fff}.editor button{margin-top:8px;padding:10px 14px;border:0;border-radius:8px;background:#fff;color:#111;font-weight:700}
-.modal{position:fixed;inset:0;background:#000;z-index:50;display:none}.modal.show{display:block}.storyview{height:100%;position:relative;display:flex;align-items:center;justify-content:center}.storyview img{max-width:100%;max-height:100%;width:100%;height:100%;object-fit:contain}.storytop{position:absolute;top:14px;left:14px;right:14px;display:flex;align-items:center;gap:10px;z-index:2}.storytop .avatar{width:34px;height:34px}.close{margin-left:auto;background:none;border:0;color:#fff;font-size:32px}.progress{position:absolute;top:6px;left:8px;right:8px;height:3px;background:#555}.progress i{display:block;width:100%;height:100%;background:#fff}.storytext{position:absolute;bottom:70px;left:20px;right:20px;text-align:center;font-size:18px;font-weight:700;text-shadow:0 2px 5px #000}
-.toast{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);background:#fff;color:#111;padding:10px 15px;border-radius:20px;display:none;z-index:70}.toast.show{display:block}
-@media(min-width:700px){.phone{box-shadow:0 0 40px #000}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LinkSpace</title>
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(255, 110, 180, .16), transparent 28%),
+        radial-gradient(circle at 85% 80%, rgba(100, 130, 255, .15), transparent 30%),
+        #f7f7f8;
+      color: #171717;
+    }
+
+    .screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px 16px;
+    }
+
+    .login-card {
+      width: min(100%, 350px);
+      background: rgba(255,255,255,.92);
+      border: 1px solid #dedede;
+      border-radius: 14px;
+      padding: 42px 38px 30px;
+      box-shadow: 0 18px 55px rgba(0,0,0,.08);
+    }
+
+    .brand {
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: 38px;
+      font-weight: 700;
+      letter-spacing: -1.5px;
+      text-align: center;
+      margin: 0 0 34px;
+    }
+
+    .field {
+      width: 100%;
+      height: 42px;
+      border: 1px solid #dbdbdb;
+      border-radius: 7px;
+      background: #fafafa;
+      padding: 0 12px;
+      margin-bottom: 8px;
+      outline: none;
+      font-size: 12px;
+    }
+
+    .field:focus {
+      border-color: #aaa;
+      background: white;
+    }
+
+    .login-btn {
+      width: 100%;
+      height: 36px;
+      border: 0;
+      border-radius: 8px;
+      margin-top: 8px;
+      background: #111;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .18s ease, opacity .18s ease;
+    }
+
+    .login-btn:hover { opacity: .88; transform: translateY(-1px); }
+
+    .error {
+      min-height: 18px;
+      color: #d93025;
+      text-align: center;
+      font-size: 12px;
+      margin: 10px 0 0;
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: #737373;
+      font-size: 11px;
+      font-weight: 700;
+      margin: 25px 0;
+    }
+    .divider::before, .divider::after {
+      content: "";
+      height: 1px;
+      background: #dbdbdb;
+      flex: 1;
+    }
+
+    .hint {
+      text-align: center;
+      font-size: 12px;
+      color: #777;
+      line-height: 1.5;
+    }
+
+    .app { display: none; min-height: 100vh; padding: 32px 16px 50px; }
+    .container { width: min(100%, 760px); margin: auto; }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 34px;
+    }
+
+    .logo-small {
+      font-family: Georgia, serif;
+      font-size: 25px;
+      font-weight: 700;
+      letter-spacing: -.8px;
+    }
+
+    .logout {
+      border: 1px solid #ddd;
+      background: rgba(255,255,255,.8);
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .hero { text-align: center; margin-bottom: 30px; }
+    .hero h1 { margin: 0 0 7px; font-size: 27px; letter-spacing: -.7px; }
+    .hero p { margin: 0; color: #777; font-size: 13px; }
+
+    .links {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    .link-card {
+      min-width: 0;
+      text-decoration: none;
+      color: inherit;
+      background: rgba(255,255,255,.86);
+      border: 1px solid rgba(0,0,0,.07);
+      border-radius: 22px;
+      padding: 13px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 9px 28px rgba(0,0,0,.055);
+      transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+
+    .link-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 14px 32px rgba(0,0,0,.09);
+      background: #fff;
+    }
+
+    .link-image {
+      width: 56px;
+      height: 56px;
+      min-width: 56px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #eee;
+      border: 1px solid rgba(0,0,0,.08);
+    }
+
+    .link-name {
+      font-size: 13px;
+      font-weight: 650;
+      line-height: 1.25;
+      overflow-wrap: anywhere;
+    }
+
+    .link-arrow {
+      margin-left: auto;
+      color: #999;
+      font-size: 17px;
+      padding-left: 3px;
+    }
+
+    @media (max-width: 520px) {
+      .login-card { padding: 38px 24px 28px; }
+      .links { gap: 11px; }
+      .link-card { padding: 10px; border-radius: 18px; gap: 9px; }
+      .link-image { width: 48px; height: 48px; min-width: 48px; }
+      .link-name { font-size: 12px; }
+      .link-arrow { display: none; }
+    }
+
+    @media (max-width: 360px) {
+      .links { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-<div class="app"><main class="phone">
 
-<section id="login" class="screen active">
-  <div class="login">
-    <div class="brand">Social</div>
-    <div class="loginbox">
-      <input id="loginUser" placeholder="Username, email address or mobile number" autocomplete="off">
-      <input id="loginPass" type="password" placeholder="Password" autocomplete="off">
-      <button class="primary" onclick="login()">Log in</button>
-      <div style="text-align:center;margin-top:20px;font-weight:700">Forgotten password?</div>
-      <button class="secondary" onclick="demoAccount()">Create new account</button>
-      <div class="demo-note">Demo website only. This login is local to this page and does not collect or send real Instagram credentials.</div>
+  <!-- LOGIN SCREEN -->
+  <main id="loginScreen" class="screen">
+    <section class="login-card">
+      <h1 class="brand">LinkSpace</h1>
+
+      <form id="loginForm">
+        <input id="username" class="field" type="text" placeholder="Username" autocomplete="username" required>
+        <input id="password" class="field" type="password" placeholder="Password" autocomplete="current-password" required>
+        <button class="login-btn" type="submit">Log in</button>
+        <div id="error" class="error"></div>
+      </form>
+
+      <div class="divider">OR</div>
+      <div class="hint">Private link collection<br>Sign in to continue</div>
+    </section>
+  </main>
+
+  <!-- LINK PAGE -->
+  <main id="app" class="app">
+    <div class="container">
+      <header class="topbar">
+        <div class="logo-small">LinkSpace</div>
+        <button id="logout" class="logout">Log out</button>
+      </header>
+
+      <section class="hero">
+        <h1>My Links</h1>
+        <p>Everything in one place.</p>
+      </section>
+
+      <section id="links" class="links"></section>
     </div>
-  </div>
-</section>
+  </main>
 
-<section id="home" class="screen">
-  <div class="topbar"><button class="iconbtn" onclick="show('profile')">＋</button><div class="logo">Social</div><button class="iconbtn" onclick="alert('Messages demo')">♡</button></div>
-  <div id="stories" class="stories"></div>
-  <div id="feed" class="feed"></div>
-  <nav class="bottom"><button onclick="show('home')">⌂</button><button onclick="addPost()">＋</button><button onclick="show('profile')"><img id="navAvatar"></button></nav>
-</section>
+  <script>
+    /*
+      ============================
+      EDIT YOUR LOGIN HERE
+      ============================
+    */
+    const LOGIN_USERNAME = "admin";
+    const LOGIN_PASSWORD = "/gamemode";
 
-<section id="profile" class="screen">
-  <div class="topbar"><button class="iconbtn" onclick="show('home')">‹</button><div class="logo" id="profileNameTop">yourname</div><button class="iconbtn" onclick="scrollToEditor()">☰</button></div>
-  <div class="profile">
-    <div class="profilehead"><img class="avatar" id="profileAvatar"><div class="stats"><div><b id="postCount">0</b><span>posts</span></div><div><b>1,389</b><span>followers</span></div><div><b>347</b><span>following</span></div></div></div>
-    <div class="bio"><b id="profileName">yourname</b><div id="profileBio">Your bio goes here.</div></div>
-    <div class="profile-actions"><button onclick="scrollToEditor()">Edit profile</button><button onclick="shareProfile()">Share profile</button></div>
-    <div class="editor" id="editor">
-      <h3>Customize your demo</h3>
-      <input id="nameInput" placeholder="Username">
-      <input id="avatarInput" placeholder="Profile image URL">
-      <input id="bioInput" placeholder="Bio">
-      <input id="postInput" placeholder="Post image URL">
-      <input id="storyInput" placeholder="Story image URL">
-      <input id="storyTextInput" placeholder="Story text">
-      <button onclick="saveProfile()">Save profile / add images</button>
-      <div class="demo-note">Use direct image URLs ending in .jpg, .png, .webp, etc. Everything is stored only in this browser.</div>
-    </div>
-    <div id="grid" class="grid"></div>
-  </div>
-  <nav class="bottom"><button onclick="show('home')">⌂</button><button onclick="addPost()">＋</button><button onclick="show('profile')"><img id="navAvatar2"></button></nav>
-</section>
+    /*
+      ============================
+      EDIT YOUR 10 LINKS HERE
+      ============================
 
-<div id="storyModal" class="modal">
-  <div class="storyview"><img id="storyImage"><div class="progress"><i></i></div>
-    <div class="storytop"><img class="avatar" id="storyAvatar"><b id="storyName"></b><button class="close" onclick="closeStory()">×</button></div>
-    <div class="storytext" id="storyText"></div>
-  </div>
-</div>
-<div id="toast" class="toast"></div>
-</main></div>
+      image:
+        Put a direct image URL here.
+        Example:
+        "https://example.com/my-photo.jpg"
 
-<script>
-const defaultAvatar='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=300';
-let data=JSON.parse(localStorage.getItem('socialDemo')||'null')||{
- name:'yourname',bio:'Your bio goes here.',avatar:defaultAvatar,
- posts:[
-  'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=900',
-  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=900',
-  'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900',
-  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=900',
-  'https://images.unsplash.com/photo-1504593811423-6dd665756598?w=900',
-  'https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?w=900'
- ],
- stories:[
-  {image:'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=900',text:'My story'},
-  {image:'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900',text:'Hello!'},
-  {image:'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=900',text:'New post'}
- ]};
-function save(){localStorage.setItem('socialDemo',JSON.stringify(data))}
-function show(id){document.querySelectorAll('.screen').forEach(x=>x.classList.remove('active'));document.getElementById(id).classList.add('active');if(id==='home')renderHome();if(id==='profile')renderProfile()}
-function login(){show('home')}
-function demoAccount(){document.getElementById('loginUser').value='demo';document.getElementById('loginPass').value='demo123';show('home')}
-function renderHome(){
- document.getElementById('stories').innerHTML=data.stories.map((s,i)=>`<div class="story" onclick="openStory(${i})"><div class="ring"><img src="${s.image}"></div>${i===0?'Your story':data.name}</div>`).join('');
- document.getElementById('feed').innerHTML=data.posts.map((p,i)=>`<article class="post"><div class="posthead"><img class="avatar" src="${data.avatar}"><strong>${data.name}</strong></div><img class="postimg" src="${p}" onerror="this.style.display='none'"><div class="actions"><button onclick="like(this)">♡</button><button onclick="alert('Comments demo')">◯</button><button onclick="sharePost()">⌁</button></div><div class="caption"><b>${data.name}</b> <span>${i%2?'A new photo ✨':'Just posted.'}</span></div></article>`).join('');
- syncAvatars();
-}
-function renderProfile(){
- document.getElementById('profileNameTop').textContent=data.name;
- document.getElementById('profileName').textContent=data.name;
- document.getElementById('profileBio').textContent=data.bio;
- document.getElementById('profileAvatar').src=data.avatar;
- document.getElementById('postCount').textContent=data.posts.length;
- document.getElementById('grid').innerHTML=data.posts.map(p=>`<img src="${p}" onerror="this.style.opacity=.3">`).join('');
- document.getElementById('nameInput').value=data.name;document.getElementById('avatarInput').value=data.avatar;document.getElementById('bioInput').value=data.bio;
- syncAvatars();
-}
-function syncAvatars(){document.querySelectorAll('#navAvatar,#navAvatar2').forEach(x=>x.src=data.avatar)}
-function saveProfile(){
- const n=document.getElementById('nameInput').value.trim();const a=document.getElementById('avatarInput').value.trim();const b=document.getElementById('bioInput').value.trim();const p=document.getElementById('postInput').value.trim();const s=document.getElementById('storyInput').value.trim();const st=document.getElementById('storyTextInput').value.trim();
- if(n)data.name=n;if(a)data.avatar=a;if(b)data.bio=b;if(p)data.posts.unshift(p);if(s)data.stories.unshift({image:s,text:st||'My story'});
- save();document.getElementById('postInput').value='';document.getElementById('storyInput').value='';document.getElementById('storyTextInput').value='';renderProfile();toast('Saved')}
-function openStory(i){const s=data.stories[i];document.getElementById('storyImage').src=s.image;document.getElementById('storyAvatar').src=data.avatar;document.getElementById('storyName').textContent=data.name;document.getElementById('storyText').textContent=s.text||'';document.getElementById('storyModal').classList.add('show')}
-function closeStory(){document.getElementById('storyModal').classList.remove('show')}
-function scrollToEditor(){document.getElementById('editor').scrollIntoView({behavior:'smooth'})}
-function like(b){b.textContent=b.textContent==='♡'?'♥':'♡'}
-function sharePost(){navigator.clipboard?.writeText(location.href);toast('Demo link copied')}
-function shareProfile(){navigator.clipboard?.writeText(location.href);toast('Profile link copied')}
-function addPost(){show('profile');setTimeout(scrollToEditor,50)}
-function toast(t){const x=document.getElementById('toast');x.textContent=t;x.classList.add('show');setTimeout(()=>x.classList.remove('show'),1400)}
-renderHome();
-</script>
+      url:
+        Put the website/link you want the button to open.
+
+      name:
+        Text shown beside the image.
+    */
+    const linkData = [
+      {
+        name: "My Website",
+        image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=300&q=80",
+        url: "https://example.com"
+      },
+      {
+        name: "Instagram",
+        image: "https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=300&q=80",
+        url: "https://instagram.com"
+      },
+      {
+        name: "YouTube",
+        image: "https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=300&q=80",
+        url: "https://youtube.com"
+      },
+      {
+        name: "Portfolio",
+        image: "https://images.unsplash.com/photo-1558655146-d09347e92766?w=300&q=80",
+        url: "https://example.com"
+      },
+      {
+        name: "Telegram",
+        image: "https://images.unsplash.com/photo-1611605698335-8b1569810432?w=300&q=80",
+        url: "https://telegram.org"
+      },
+      {
+        name: "GitHub",
+        image: "https://images.unsplash.com/photo-1556075798-4825dfaaf498?w=300&q=80",
+        url: "https://github.com"
+      },
+      {
+        name: "WhatsApp",
+        image: "https://images.unsplash.com/photo-1614680376573-df3480f0c6ff?w=300&q=80",
+        url: "https://whatsapp.com"
+      },
+      {
+        name: "Store",
+        image: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=300&q=80",
+        url: "https://example.com"
+      },
+      {
+        name: "Contact",
+        image: "https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=300&q=80",
+        url: "mailto:hello@example.com"
+      },
+      {
+        name: "More",
+        image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=300&q=80",
+        url: "https://example.com"
+      }
+    ];
+
+    const loginScreen = document.getElementById("loginScreen");
+    const app = document.getElementById("app");
+    const loginForm = document.getElementById("loginForm");
+    const error = document.getElementById("error");
+    const links = document.getElementById("links");
+    const logout = document.getElementById("logout");
+
+    function showApp() {
+      loginScreen.style.display = "none";
+      app.style.display = "block";
+      renderLinks();
+    }
+
+    function showLogin() {
+      app.style.display = "none";
+      loginScreen.style.display = "grid";
+    }
+
+    function renderLinks() {
+      links.innerHTML = "";
+
+      linkData.slice(0, 10).forEach(item => {
+        const a = document.createElement("a");
+        a.className = "link-card";
+        a.href = item.url;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+
+        const img = document.createElement("img");
+        img.className = "link-image";
+        img.src = item.image;
+        img.alt = item.name;
+        img.loading = "lazy";
+        img.onerror = function () {
+          this.src = "data:image/svg+xml;charset=UTF-8," +
+            encodeURIComponent(
+              '<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">' +
+              '<rect width="100%" height="100%" fill="#eeeeee"/>' +
+              '<text x="50%" y="54%" text-anchor="middle" font-family="Arial" font-size="13" fill="#777">IMAGE</text>' +
+              '</svg>'
+            );
+        };
+
+        const name = document.createElement("span");
+        name.className = "link-name";
+        name.textContent = item.name;
+
+        const arrow = document.createElement("span");
+        arrow.className = "link-arrow";
+        arrow.textContent = "›";
+
+        a.appendChild(img);
+        a.appendChild(name);
+        a.appendChild(arrow);
+        links.appendChild(a);
+      });
+    }
+
+    loginForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const username = document.getElementById("username").value.trim();
+      const password = document.getElementById("password").value;
+
+      if (username === LOGIN_USERNAME && password === LOGIN_PASSWORD) {
+        sessionStorage.setItem("loggedIn", "true");
+        error.textContent = "";
+        showApp();
+      } else {
+        error.textContent = "Sorry, your login details are incorrect.";
+      }
+    });
+
+    logout.addEventListener("click", function() {
+      sessionStorage.removeItem("loggedIn");
+      document.getElementById("password").value = "";
+      showLogin();
+    });
+
+    if (sessionStorage.getItem("loggedIn") === "true") {
+      showApp();
+    }
+  </script>
 </body>
 </html>
